@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  flask:
+    build: ./docker/flask
+    expose:
+      - "5010"
+    ports:
+      - 5010:5010
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - conf_gunicorn=gunicorn-dev.py
+    command: /usr/bin/gunicorn -c gunicorn-dev.py app:app
