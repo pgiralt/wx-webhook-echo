@@ -1,13 +1,10 @@
-<h1>Cisco Acronyms Bot</h1>
+<h1>Webex Webhook Echo Bot</h1>
 
-Allows users to look up acronyms found on the Cisco Acronyms Sharepoint Site.
-
-https://cisco.sharepoint.com/sites/CiscoAcronyms
+Simple bot that just echos back the contents of a Webhook for demonstration purposes.
 
 Create a creds.py file that contains the following:
 
 ```
-appReg_clientSecret = ''    # Client Secret to access Sharepoint
 access_token = ''           # Access Token for Webex Bot
 wehbook_host = ''           # URL for webhook 
 ```
