@@ -2,8 +2,6 @@ from webexteamssdk import WebexTeamsAPI, ApiError, Webhook
 from creds import access_token, wehbook_host
 import json
 
-logging_space = 'Y2lzY29zcGFyazovL3VzL1JPT00vNzFjOTJhMDAtMTAwMi0xMWViLWJkYTMtMDUxNjM0MTExNDdm'
-
 help_text = "Hello. I'm the Webhook Echo bot. I'm here to demonstrate what a message sent to a wehbook looks like." \
             "Just send me a message and I will echo back the webhook that I receive."
 
@@ -23,7 +21,6 @@ def post_message(message, space):
         return {'success': False,
                 'messages': 'API Error encountered',
                 'response': '{}'.format(e)}
-
 
 
 def set_up_webhooks():
