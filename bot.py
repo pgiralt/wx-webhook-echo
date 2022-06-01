@@ -165,14 +165,10 @@ def handle_webhook(request_data):
                          f"**Message text decodes to:** {message.text}\n")
             wbxt_api.messages.create(
                 room.id,
-                markdown=f"**New Webhook POST received. Payload:**\n"
-                         f"```\n{json.dumps(webhook_obj._json_data, indent=4)}\n```\n"
-                         f"**Room decodes to:** {room.title}\n"
-                         f"**From decodes to:** {person.displayName}\n"
-                         f"**Message text decodes to:** {attachment_action.inputs}\n")
-
-        else:
-            pass
+                markdown=f"**New Attachment Action in Room:** {room.title}\n"
+                         f"**From:** {person.displayName}\n"
+                         f"**Payload:**\n"
+                         f"```\n{json.dumps(webhook_obj._json_data, indent=4)}\n```\n")
     except Exception as e:
         print(e)
 
