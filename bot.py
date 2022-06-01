@@ -168,7 +168,7 @@ def handle_webhook(request_data):
                 markdown=f"**New Attachment Action in Room:** {room.title}\n"
                          f"**From:** {person.displayName}\n"
                          f"**Payload:**\n"
-                         f"```\n{json.dumps(webhook_obj._json_data, indent=4)}\n```\n")
+                         f"```\n{json.dumps(attachment_action._json_data, indent=4)}\n```\n")
     except Exception as e:
         print(e)
 
