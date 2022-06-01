@@ -123,16 +123,27 @@ def handle_webhook(request_data):
                     if request.lower() == 'help':
                         post_message(help_text, room.id)
                     elif "http://adaptivecards.io/schemas/adaptive-card.json" in request.lower():
-                        post_message("detected card text", room.id)
                         wbxt_api.messages.create(
                             room.id,
-                            text="Your Webex client cannot display this card",
-                            attachments=[{
-                                "contentType": "application/vnd.microsoft.card.adaptive",
-                                "content": message.text
-                            }]
-                        )
-                        post_message("end card dispaly", room.id)
+                            markdown=f"**New Webhook POST received. Payload:**\n"
+                                     f"```\n{json.dumps(webhook_obj._json_data, indent=4)}\n```\n"
+                                     f"**Room decodes to:** {room.title}\n"
+                                     f"**From decodes to:** {person.displayName}\n"
+                                     f"**Message text decodes to:** {message.text}\n")
+                        post_message("detected card text", room.id)
+                        try:
+                            card_json = json.loads(message.text)
+                            wbxt_api.messages.create(
+                                room.id,
+                                text="Your Webex client cannot display this card",
+                                attachments=[{
+                                    "contentType": "application/vnd.microsoft.card.adaptive",
+                                    "content": json.loads(message.text)
+                                }]
+                            )
+                            post_message("end card display", room.id)
+                        except ValueError:
+                            post_message("Invalid JSON detected", room.id)
                     else:
                         wbxt_api.messages.create(
                             room.id,
