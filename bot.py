@@ -123,14 +123,7 @@ def handle_webhook(request_data):
                     if request.lower() == 'help':
                         post_message(help_text, room.id)
                     elif "http://adaptivecards.io/schemas/adaptive-card.json" in request.lower():
-                        wbxt_api.messages.create(
-                            room.id,
-                            markdown=f"**New Webhook POST received. Payload:**\n"
-                                     f"```\n{json.dumps(webhook_obj._json_data, indent=4)}\n```\n"
-                                     f"**Room decodes to:** {room.title}\n"
-                                     f"**From decodes to:** {person.displayName}\n"
-                                     f"**Message text decodes to:** {message.text}\n")
-                        post_message("detected card text", room.id)
+                        post_message("Detected Card Data - Attempting to Render Card Below", room.id)
                         try:
                             card_json = json.loads(message.text)
                             wbxt_api.messages.create(
@@ -138,10 +131,9 @@ def handle_webhook(request_data):
                                 text="Your Webex client cannot display this card",
                                 attachments=[{
                                     "contentType": "application/vnd.microsoft.card.adaptive",
-                                    "content": json.loads(message.text)
+                                    "content": card_json
                                 }]
                             )
-                            post_message("end card display", room.id)
                         except ValueError:
                             post_message("Invalid JSON detected", room.id)
                     else:
@@ -153,8 +145,25 @@ def handle_webhook(request_data):
                                      f"**From decodes to:** {person.displayName}\n"
                                      f"**Message text decodes to:** {message.text}\n")
 
-            else:
-                pass
+        elif webhook_obj.resource == 'attachmentActions':
+            room = wbxt_api.rooms.get(webhook_obj.data.roomId)                    # Get the room details
+            message = wbxt_api.messages.get(webhook_obj.data.id)                  # Get the message details
+            person = wbxt_api.people.get(message.personId)                        # Get the sender's details
+
+            print("NEW ATTACHMENT ACTION IN ROOM '{}'".format(room.title))
+            print("FROM '{}'".format(person.displayName))
+            print("MESSAGE '{}'\n".format(message.text))
+            print(message)
+
+            wbxt_api.messages.create(
+                room.id,
+                markdown=f"**New Webhook POST received. Payload:**\n"
+                         f"```\n{json.dumps(webhook_obj._json_data, indent=4)}\n```\n"
+                         f"**Room decodes to:** {room.title}\n"
+                         f"**From decodes to:** {person.displayName}\n"
+                         f"**Message text decodes to:** {message.text}\n")
+        else:
+            pass
     except Exception as e:
         print(e)
 
