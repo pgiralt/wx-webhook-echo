@@ -129,9 +129,10 @@ def handle_webhook(request_data):
                             text="Your Webex client cannot display this card",
                             attachments=[{
                                 "contentType": "application/vnd.microsoft.card.adaptive",
-                                "content": request
+                                "content": message.text
                             }]
                         )
+                        post_message("end card dispaly", room.id)
                     else:
                         wbxt_api.messages.create(
                             room.id,
