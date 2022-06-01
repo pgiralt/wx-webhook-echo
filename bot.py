@@ -149,7 +149,7 @@ def handle_webhook(request_data):
             room = wbxt_api.rooms.get(webhook_obj.data.roomId)                      # Get the room details
             message = wbxt_api.messages.get(webhook_obj.data.messageId)             # Get the message details
             person = wbxt_api.people.get(message.personId)                          # Get the sender's details
-            attachment_action = wbxt_api.attachment_actions.get(webhook_obj.id)     # Get attachment actions
+            attachment_action = wbxt_api.attachment_actions.get(webhook_obj.data.id)     # Get attachment actions
 
             print("NEW ATTACHMENT ACTION IN ROOM '{}'".format(room.title))
             print("FROM '{}'".format(person.displayName))
