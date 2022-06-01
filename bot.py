@@ -146,9 +146,10 @@ def handle_webhook(request_data):
                                      f"**Message text decodes to:** {message.text}\n")
 
         elif webhook_obj.resource == 'attachmentActions':
-            room = wbxt_api.rooms.get(webhook_obj.data.roomId)                    # Get the room details
-            message = wbxt_api.messages.get(webhook_obj.data.id)                  # Get the message details
-            person = wbxt_api.people.get(message.personId)                        # Get the sender's details
+            room = wbxt_api.rooms.get(webhook_obj.data.roomId)                      # Get the room details
+            message = wbxt_api.messages.get(webhook_obj.data.messageId)             # Get the message details
+            person = wbxt_api.people.get(message.personId)                          # Get the sender's details
+            attachment_action = wbxt_api.attachment_actions.get(webhook_obj.id)     # Get attachment actions
 
             print("NEW ATTACHMENT ACTION IN ROOM '{}'".format(room.title))
             print("FROM '{}'".format(person.displayName))
@@ -162,6 +163,14 @@ def handle_webhook(request_data):
                          f"**Room decodes to:** {room.title}\n"
                          f"**From decodes to:** {person.displayName}\n"
                          f"**Message text decodes to:** {message.text}\n")
+            wbxt_api.messages.create(
+                room.id,
+                markdown=f"**New Webhook POST received. Payload:**\n"
+                         f"```\n{json.dumps(webhook_obj._json_data, indent=4)}\n```\n"
+                         f"**Room decodes to:** {room.title}\n"
+                         f"**From decodes to:** {person.displayName}\n"
+                         f"**Message text decodes to:** {attachment_action.inputs}\n")
+
         else:
             pass
     except Exception as e:
