@@ -28,6 +28,7 @@ def set_up_webhooks():
         memberships_found = False
         messages_found = False
         rooms_found = False
+        attachment_actions_found = False
 
         target_url = wehbook_host + '/webhook'
 
@@ -43,6 +44,8 @@ def set_up_webhooks():
                     messages_found = True
                 elif webhook.resource == 'rooms':
                     rooms_found = True
+                elif webhook.resource == 'attachmentActions':
+                    attachment_actions_found = True
 
         if not messages_found:
             result = wbxt_api.webhooks.create(name='Echo Bot Messages Webhook',
@@ -58,6 +61,11 @@ def set_up_webhooks():
             result = wbxt_api.webhooks.create(name='Echo Bot Rooms Webhook',
                                               targetUrl=target_url,
                                               resource='rooms',
+                                              event='created')
+        if not attachment_actions_found:
+            result = wbxt_api.webhooks.create(name='Echo Bot attachmentActions Webhook',
+                                              targetUrl=target_url,
+                                              resource='attachmentActions',
                                               event='created')
 
         result = True
@@ -114,6 +122,16 @@ def handle_webhook(request_data):
 
                     if request.lower() == 'help':
                         post_message(help_text, room.id)
+                    elif "http://adaptivecards.io/schemas/adaptive-card.json" in request.lower():
+                        post_message("detected card text", room.id)
+                        wbxt_api.messages.create(
+                            room.id,
+                            text="Your Webex client cannot display this card",
+                            attachments=[{
+                                "contentType": "application/vnd.microsoft.card.adaptive",
+                                "content": request
+                            }]
+                        )
                     else:
                         wbxt_api.messages.create(
                             room.id,
