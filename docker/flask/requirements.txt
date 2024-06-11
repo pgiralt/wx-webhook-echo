@@ -10,7 +10,7 @@ MarkupSafe==2.1.1
 PyJWT==2.4.0
 requests==2.27.1
 requests-toolbelt==0.9.1
-urllib3==1.26.9
+urllib3==1.26.18
 webexteamssdk>=1.6
 Werkzeug>=1.0.1
 watchdog==2.1.8
